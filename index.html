@@ -192,13 +192,13 @@
       <label><span class="eyebrow" style="color:var(--cinza)">E-mail</span><input id="adminEmail" type="email" placeholder="admin@empresa.com.br"></label>
       <label><span class="eyebrow" style="color:var(--cinza)">Senha</span><input id="adminPassword" type="password" placeholder="••••••••"></label>
       <div class="admin-row"><button class="pill pill--dark" id="adminLoginBtn">Entrar</button><button class="pill pill--light" id="closeAdmin">Fechar</button></div>
-      <div class="note"><strong>URLs configuradas</strong><br>FAQ Storage: <span class="font-mono">/storage/v1/object/public/faq/src/faq.js</span><br>Projeto: <span class="font-mono">https://hgenglxqnunyafymzvoo.supabase.co</span></div>
+      <div class="note"><strong>URLs configuradas</strong><br>FAQ Storage: <span class="font-mono">/storage/v1/object/public/faq/src/services/faq.js</span><br>Projeto: <span class="font-mono">https://hgenglxqnunyafymzvoo.supabase.co</span></div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const STORAGE_FAQ_URL = "https://hgenglxqnunyafymzvoo.supabase.co/storage/v1/object/public/faq/src/faq.js";
+    const STORAGE_FAQ_URL = "https://hgenglxqnunyafymzvoo.supabase.co/storage/v1/object/public/faq/src/services/faq.js";
     const SUPABASE_PROJECT_URL = "https://hgenglxqnunyafymzvoo.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_D3zt55212RFCCT-ocjdZMg_WzloRM9E";
 
@@ -208,10 +208,10 @@
     };
 
     function norm(v="") { return String(v).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
-    function escapeHtml(v="") { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+    function escapeHtml(v="") { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;"); }
     function showStatus(msg, type="ok") { els.statusBar.textContent = msg; els.statusBar.className = `statusbar show ${type}`; }
     function hideStatus() { els.statusBar.className = "statusbar"; els.statusBar.textContent = ""; }
-    function matchItem(item, query) { const q = norm(query); if (!q) return true; const terms = q.split(/\s+/).filter(Boolean); const haystack = norm([item.question, item.answer, (item.steps||[]).join(" "), (item.tags||[]).join(" "), item.routine||""] .join(" ")); return terms.every(t => haystack.includes(t)); }
+    function matchItem(item, query) { const q = norm(query); if (!q) return true; const terms = q.split(/\s+/).filter(Boolean); const haystack = norm([item.question, item.answer, (item.steps||[]).join(" "), (item.tags||[]).join(" "), item.routine||""].join(" ")); return terms.every(t => haystack.includes(t)); }
     function highlight(text, query) { const source = String(text || ""); const q = norm(query); if (!q) return escapeHtml(source); const safe = escapeHtml(source); const terms = [...new Set(q.split(/\s+/).filter(t => t.length > 1))]; let out = safe; for (const term of terms) { const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"); out = out.replace(re, "<mark>$1</mark>"); } return out; }
     function countByCategory(id) { return state.items.filter(i => i.status !== "rascunho" && i.category === id).length; }
     function getVisibleItems() { return state.items.filter(i => i.status !== "rascunho" && (state.category === "todas" || i.category === state.category) && matchItem(i, state.query)); }
