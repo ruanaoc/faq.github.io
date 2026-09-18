@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin · Cadastro de tópicos do FAQ · Grupo Voalle</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='10' y1='10' x2='54' y2='54'%3E%3Cstop offset='0' stop-color='%233BE0C8'/%3E%3Cstop offset='1' stop-color='%231657F0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2307142B'/%3E%3Cpath d='M15 17 L32 47 L49 17' fill='none' stroke='url(%23g)' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='46' r='3.6' fill='%23EAF6FF'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noite:#07142b; --noite-2:#0b1e3c; --azul:#1657f0; --azul-2:#0f3fb8;
+    --fibra:#3be0c8; --papel:#f3f7fd; --branco:#fff; --tinta:#0d1b2e;
+    --cinza:#5b6b85; --linha:#dbe5f2; --ambar:#d9860f; --sucesso:#12806c; --erro:#c0392b;
+    --raio:18px; --sombra:0 18px 50px -26px rgba(7,20,43,.38);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"IBM Plex Sans",system-ui,sans-serif;background:var(--papel);color:var(--tinta);-webkit-font-smoothing:antialiased}
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer;border:0;background:none}
+  a{color:var(--azul)}
+  .container{width:min(1120px,calc(100% - 32px));margin:0 auto}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  .display{font-family:"Space Grotesk",sans-serif}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cinza)}
+
+  /* topo */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(243,247,253,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--linha)}
+  .topbar__row{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand img{height:34px;display:block}
+  .brand span{font-size:13px;color:var(--cinza)}
+  .pill{border-radius:999px;padding:10px 16px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+  .pill--dark{background:var(--noite);color:#fff}
+  .pill--dark:hover{background:var(--azul)}
+  .pill--light{background:#fff;color:var(--cinza);border:1px solid var(--linha)}
+  .pill--light:hover{color:var(--azul);border-color:var(--azul)}
+  .pill[disabled]{opacity:.55;cursor:not-allowed}
+
+  /* login */
+  .login-wrap{min-height:calc(100vh - 68px);display:grid;place-items:center;padding:40px 0}
+  .card{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra)}
+  .login{width:min(420px,100%);padding:30px}
+  .login h1{font-family:"Space Grotesk",sans-serif;font-size:24px;margin:8px 0 6px}
+  .login p.sub{color:var(--cinza);font-size:14px;margin:0 0 22px}
+
+  /* formulário */
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px}
+  .field .help{display:block;font-weight:400;color:var(--cinza);font-size:12.5px;margin-top:2px}
+  .input,.textarea,.select{width:100%;padding:11px 13px;border:1px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta);outline:none;transition:.15s}
+  .input:focus,.textarea:focus,.select:focus{border-color:var(--azul);box-shadow:0 0 0 3px rgba(22,87,240,.12)}
+  .textarea{min-height:96px;resize:vertical;line-height:1.5}
+  .textarea--steps{min-height:132px;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid-2{grid-template-columns:1fr}}
+
+  /* layout admin */
+  .layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:22px;padding:26px 0 60px;align-items:start}
+  @media(max-width:1000px){.layout{grid-template-columns:1fr}}
+  .panel{padding:24px}
+  .panel h2{font-family:"Space Grotesk",sans-serif;font-size:19px;margin:0 0 4px}
+  .panel p.sub{color:var(--cinza);font-size:13.5px;margin:0 0 20px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+
+  /* lista */
+  .list{display:flex;flex-direction:column;gap:10px;max-height:640px;overflow:auto;padding-right:4px}
+  .item{border:1px solid var(--linha);border-radius:14px;padding:13px 14px;background:#fff}
+  .item h3{font-size:14.5px;margin:0 0 4px;font-weight:600;line-height:1.35}
+  .item .meta{font-size:12px;color:var(--cinza);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tag{border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:600;background:#eef4ff;color:var(--azul-2)}
+  .tag--rascunho{background:#fdf1dd;color:#8a5a05}
+  .tag--publicado{background:#e2f7f1;color:var(--sucesso)}
+  .item .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .mini{font-size:12.5px;font-weight:600;color:var(--cinza);border:1px solid var(--linha);border-radius:999px;padding:6px 11px}
+  .mini:hover{color:var(--azul);border-color:var(--azul)}
+  .mini--danger:hover{color:var(--erro);border-color:var(--erro)}
+
+  /* avisos */
+  .alert{border-radius:12px;padding:11px 13px;font-size:13.5px;margin-bottom:16px;display:none}
+  .alert--erro{background:#fdecea;color:var(--erro);border:1px solid #f5c6c2;display:block}
+  .alert--ok{background:#e2f7f1;color:var(--sucesso);border:1px solid #b9e7db;display:block}
+  .alert--info{background:#eef4ff;color:var(--azul-2);border:1px solid #cfdefb;display:block}
+  .hidden{display:none !important}
+  .toast{position:fixed;right:18px;bottom:18px;z-index:50;background:var(--noite);color:#fff;padding:12px 16px;border-radius:12px;font-size:13.5px;box-shadow:var(--sombra);opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .counter{font-size:12px;color:var(--cinza)}
+  .foot{border-top:1px solid var(--linha);padding:18px 0;color:var(--cinza);font-size:12.5px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar__row">
+    <div class="brand">
+      <img src="https://grupovoalle.com.br/images/logo.svg" alt="Grupo Voalle" onerror="this.style.display='none'">
+      <div>
+        <div class="eyebrow">Administração do FAQ</div>
+        <span>Cadastro de tópicos · pós go live</span>
+      </div>
+    </div>
+    <div class="topbar__actions" id="topActions">
+      <span class="counter hidden" id="userBadge"></span>
+      <button class="pill pill--light hidden" id="btnLogout">Sair</button>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<main class="login-wrap" id="viewLogin">
+  <form class="card login" id="formLogin" autocomplete="on">
+    <div class="eyebrow">Acesso restrito</div>
+    <h1 class="display">Entrar como administrador</h1>
+    <p class="sub">Somente usuários cadastrados em <code class="mono">faq_admins</code> conseguem publicar tópicos.</p>
+
+    <div class="alert" id="loginAlert"></div>
+
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input class="input" type="email" id="email" required placeholder="voce@grupovoalle.com.br" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="senha">Senha</label>
+      <input class="input" type="password" id="senha" required placeholder="••••••••" autocomplete="current-password" minlength="8">
+    </div>
+    <button class="pill pill--dark" type="submit" id="btnLogin" style="width:100%;justify-content:center">Entrar</button>
+  </form>
+</main>
+
+<!-- ADMIN -->
+<main class="container layout hidden" id="viewAdmin">
+
+  <section class="card panel">
+    <h2 class="display" id="formTitle">Novo tópico do FAQ</h2>
+    <p class="sub">Os campos abaixo alimentam a tela pública de dúvidas frequentes.</p>
+
+    <div class="alert" id="formAlert"></div>
+
+    <form id="formTopico">
+      <input type="hidden" id="topicoId">
+
+      <div class="field">
+        <label for="jornada">Jornada
+          <span class="help">Etapa da jornada do cliente onde a dúvida aparece.</span>
+        </label>
+        <select class="select" id="jornada" required></select>
+      </div>
+
+      <div class="field">
+        <label for="titulo">Título
+          <span class="help">A pergunta como o cliente faria. Ex.: “Como emitir a NFCom depois do go live?”</span>
+        </label>
+        <input class="input" type="text" id="titulo" required maxlength="180" placeholder="Digite a pergunta">
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição
+          <span class="help">Resposta direta, em 1 a 3 frases.</span>
+        </label>
+        <textarea class="textarea" id="descricao" required placeholder="Explique a resposta de forma objetiva"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="passos">Passo a passo
+          <span class="help">Um passo por linha. A numeração é aplicada automaticamente.</span>
+        </label>
+        <textarea class="textarea textarea--steps" id="passos" placeholder="Abra o menu Faturamento&#10;Selecione o período&#10;Clique em Gerar"></textarea>
+        <span class="counter" id="passosCount">0 passos</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="rotina">Rotina
+            <span class="help">Caminho exato no sistema.</span>
+          </label>
+          <input class="input" type="text" id="rotina" placeholder="Financeiro / Faturamento / NFCom">
+        </div>
+        <div class="field">
+          <label for="docLabel">Documento da Universidade Voalle
+            <span class="help">Nome do material de apoio.</span>
+          </label>
+          <input class="input" type="text" id="docLabel" placeholder="Emissão de NFCom">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="docUrl">Link do documento
+          <span class="help">URL completa da Universidade Voalle (https://...).</span>
+        </label>
+        <input class="input" type="url" id="docUrl" placeholder="https://universidade.voalle.com.br/...">
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="palavras">Palavras-chave
+            <span class="help">Separadas por vírgula. Melhoram a busca do FAQ.</span>
+          </label>
+          <input class="input" type="text" id="palavras" placeholder="nfcom, nota fiscal, faturamento">
+        </div>
+        <div class="field">
+          <label for="status">Situação
+            <span class="help">Rascunho não aparece no FAQ público.</span>
+          </label>
+          <select class="select" id="status">
+            <option value="publicado">Publicado</option>
+            <option value="rascunho">Rascunho</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="pill pill--dark" type="submit" id="btnSalvar">Salvar tópico</button>
+        <button class="pill pill--light" type="button" id="btnLimpar">Limpar formulário</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card panel">
+    <h2 class="display">Tópicos cadastrados</h2>
+    <p class="sub" id="listResumo">Carregando…</p>
+
+    <div class="alert" id="listAlert"></div>
+
+    <div class="field">
+      <input class="input" type="search" id="busca" placeholder="Filtrar por título, rotina ou palavra-chave">
+    </div>
+
+    <div class="list" id="lista"></div>
+
+    <div class="actions" style="margin-top:18px">
+      <button class="pill pill--dark" type="button" id="btnPublicarStorage">Publicar no Storage</button>
+      <button class="pill pill--light" type="button" id="btnBaixarJs">Baixar faq.js</button>
+    </div>
+    <p class="counter" style="margin-top:10px">
+      Publicar no Storage regenera <code class="mono">faq/src/services/faq.js</code> com os tópicos publicados — é o arquivo que a tela pública lê.
+    </p>
+  </section>
+</main>
+
+<footer class="foot hidden" id="rodape">
+  <div class="container">Grupo Voalle · área administrativa do FAQ pós go live</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* =========================================================
+   Configuração do projeto
+   ========================================================= */
+const SUPABASE_PROJECT_URL     = "https://hgenglxqnunyafymzvoo.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_D3zt55212RFCCT-ocjdZMg_WzloRM9E";
+const STORAGE_BUCKET           = "faq";
+const STORAGE_PATH             = "src/services/faq.js";
+
+/* Fallback de jornadas caso a tabela faq_categories ainda esteja vazia */
+const JORNADAS_PADRAO = [
+  { id:"acessos",     label:"Acessos & Perfis" },
+  { id:"vender",      label:"Vender" },
+  { id:"ativar",      label:"Ativar" },
+  { id:"faturar",     label:"Faturar · Fiscal" },
+  { id:"cobrar",      label:"Cobrar" },
+  { id:"atender",     label:"Atender" },
+  { id:"integracoes", label:"Integrações" },
+  { id:"suporte",     label:"Suporte" }
+];
+
+const supabase = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const state = { user:null, categorias:[], artigos:[], filtro:"" };
+
+const els = {
+  viewLogin: document.getElementById("viewLogin"),
+  viewAdmin: document.getElementById("viewAdmin"),
+  rodape: document.getElementById("rodape"),
+  formLogin: document.getElementById("formLogin"),
+  loginAlert: document.getElementById("loginAlert"),
+  btnLogin: document.getElementById("btnLogin"),
+  btnLogout: document.getElementById("btnLogout"),
+  userBadge: document.getElementById("userBadge"),
+  formTopico: document.getElementById("formTopico"),
+  formTitle: document.getElementById("formTitle"),
+  formAlert: document.getElementById("formAlert"),
+  listAlert: document.getElementById("listAlert"),
+  listResumo: document.getElementById("listResumo"),
+  lista: document.getElementById("lista"),
+  busca: document.getElementById("busca"),
+  jornada: document.getElementById("jornada"),
+  passos: document.getElementById("passos"),
+  passosCount: document.getElementById("passosCount"),
+  btnSalvar: document.getElementById("btnSalvar"),
+  btnLimpar: document.getElementById("btnLimpar"),
+  btnPublicarStorage: document.getElementById("btnPublicarStorage"),
+  btnBaixarJs: document.getElementById("btnBaixarJs"),
+  toast: document.getElementById("toast")
+};
+
+/* =========================================================
+   Utilidades
+   ========================================================= */
+function escapeHtml(valor){
+  return String(valor == null ? "" : valor)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function alerta(el, tipo, mensagem){
+  if(!el) return;
+  el.className = "alert alert--" + tipo;
+  el.textContent = mensagem;
+}
+function limparAlerta(el){
+  if(!el) return;
+  el.className = "alert";
+  el.textContent = "";
+}
+function toast(mensagem){
+  els.toast.textContent = mensagem;
+  els.toast.classList.add("show");
+  setTimeout(function(){ els.toast.classList.remove("show"); }, 2600);
+}
+function linhasParaArray(texto){
+  return String(texto || "").split("\n").map(function(l){ return l.trim(); }).filter(Boolean);
+}
+function listaParaArray(texto){
+  return String(texto || "").split(/[,;]/).map(function(t){ return t.trim().toLowerCase(); }).filter(Boolean);
+}
+
+/* =========================================================
+   Autenticação + verificação de administrador
+   ========================================================= */
+async function ehAdministrador(userId){
+  const { data, error } = await supabase
+    .from("faq_admins")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if(error) throw error;
+  return Boolean(data);
+}
+
+els.formLogin.addEventListener("submit", async function(evento){
+  evento.preventDefault();
+  limparAlerta(els.loginAlert);
+  els.btnLogin.disabled = true;
+  els.btnLogin.textContent = "Entrando…";
+
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("senha").value;
+
+  try{
+    const { data, error } = await supabase.auth.signInWithPassword({ email: email, password: senha });
+    if(error) throw new Error(traduzErroLogin(error.message));
+
+    const admin = await ehAdministrador(data.user.id);
+    if(!admin){
+      await supabase.auth.signOut();
+      throw new Error("Este usuário existe, mas não tem permissão de administrador do FAQ.");
+    }
+
+    state.user = data.user;
+    await abrirAdmin();
+  }catch(erro){
+    alerta(els.loginAlert, "erro", erro.message || "Não foi possível entrar.");
+  }finally{
+    els.btnLogin.disabled = false;
+    els.btnLogin.textContent = "Entrar";
+  }
+});
+
+function traduzErroLogin(mensagem){
+  const m = String(mensagem || "").toLowerCase();
+  if(m.indexOf("invalid login") >= 0) return "E-mail ou senha inválidos.";
+  if(m.indexOf("email not confirmed") >= 0) return "E-mail ainda não confirmado no Supabase Auth.";
+  if(m.indexOf("invalid api key") >= 0) return "Chave pública do Supabase inválida neste arquivo.";
+  return mensagem;
+}
+
+els.btnLogout.addEventListener("click", async function(){
+  await supabase.auth.signOut();
+  state.user = null;
+  els.viewAdmin.classList.add("hidden");
+  els.rodape.classList.add("hidden");
+  els.btnLogout.classList.add("hidden");
+  els.userBadge.classList.add("hidden");
+  els.viewLogin.classList.remove("hidden");
+  els.formLogin.reset();
+});
+
+async function abrirAdmin(){
+  els.viewLogin.classList.add("hidden");
+  els.viewAdmin.classList.remove("hidden");
+  els.rodape.classList.remove("hidden");
+  els.btnLogout.classList.remove("hidden");
+  els.userBadge.classList.remove("hidden");
+  els.userBadge.textContent = state.user.email;
+  await carregarJornadas();
+  await carregarArtigos();
+}
+
+/* Sessão já ativa (refresh da página) */
+(async function restaurarSessao(){
+  try{
+    const { data } = await supabase.auth.getSession();
+    if(data && data.session && data.session.user){
+      const admin = await ehAdministrador(data.session.user.id);
+      if(admin){
+        state.user = data.session.user;
+        await abrirAdmin();
+      }
+    }
+  }catch(erro){
+    console.warn("Sessão não restaurada:", erro.message);
+  }
+})();
+
+/* =========================================================
+   Jornadas (faq_categories)
+   ========================================================= */
+async function carregarJornadas(){
+  let categorias = [];
+  try{
+    const { data, error } = await supabase
+      .from("faq_categories")
+      .select("id,label,position")
+      .order("position", { ascending:true });
+    if(error) throw error;
+    categorias = data || [];
+  }catch(erro){
+    console.warn("Não foi possível ler faq_categories:", erro.message);
+  }
+  if(!categorias.length) categorias = JORNADAS_PADRAO;
+
+  state.categorias = categorias;
+  els.jornada.innerHTML = '<option value="">Selecione a jornada</option>' + categorias.map(function(cat){
+    return '<option value="' + escapeHtml(cat.id) + '">' + escapeHtml(cat.label) + '</option>';
+  }).join("");
+}
+
+function rotuloJornada(id){
+  const encontrada = state.categorias.find(function(cat){ return cat.id === id; });
+  return encontrada ? encontrada.label : id;
+}
+
+/* =========================================================
+   Artigos (faq_articles)
+   ========================================================= */
+async function carregarArtigos(){
+  limparAlerta(els.listAlert);
+  try{
+    const { data, error } = await supabase
+      .from("faq_articles")
+      .select("*")
+      .order("updated_at", { ascending:false });
+    if(error) throw error;
+    state.artigos = data || [];
+    renderizarLista();
+  }catch(erro){
+    alerta(els.listAlert, "erro", "Erro ao carregar os tópicos: " + erro.message);
+    els.listResumo.textContent = "—";
+  }
+}
+
+function renderizarLista(){
+  const termo = state.filtro.trim().toLowerCase();
+  const filtrados = state.artigos.filter(function(item){
+    if(!termo) return true;
+    const alvo = [item.question, item.answer, item.routine, (item.tags || []).join(" ")].join(" ").toLowerCase();
+    return alvo.indexOf(termo) >= 0;
+  });
+
+  const publicados = state.artigos.filter(function(i){ return i.status === "publicado"; }).length;
+  const rascunhos  = state.artigos.length - publicados;
+  els.listResumo.textContent = state.artigos.length + " tópicos · " + publicados + " publicados · " + rascunhos + " em rascunho";
+
+  if(!filtrados.length){
+    els.lista.innerHTML = '<p class="counter">Nenhum tópico encontrado para esse filtro.</p>';
+    return;
+  }
+
+  els.lista.innerHTML = filtrados.map(function(item){
+    const situacao = item.status === "publicado" ? "publicado" : "rascunho";
+    const passos = (item.steps || []).length;
+    return '' +
+      '<article class="item">' +
+        '<h3>' + escapeHtml(item.question) + '</h3>' +
+        '<div class="meta">' +
+          '<span class="tag">' + escapeHtml(rotuloJornada(item.category_id)) + '</span>' +
+          '<span class="tag tag--' + situacao + '">' + situacao + '</span>' +
+          (item.routine ? '<span class="mono">' + escapeHtml(item.routine) + '</span>' : '') +
+          (passos ? '<span>' + passos + ' passos</span>' : '') +
+        '</div>' +
+        '<div class="row">' +
+          '<button class="mini" data-acao="editar" data-id="' + escapeHtml(item.id) + '">Editar</button>' +
+          '<button class="mini" data-acao="situacao" data-id="' + escapeHtml(item.id) + '">' +
+            (item.status === "publicado" ? "Despublicar" : "Publicar") +
+          '</button>' +
+          '<button class="mini mini--danger" data-acao="excluir" data-id="' + escapeHtml(item.id) + '">Excluir</button>' +
+        '</div>' +
+      '</article>';
+  }).join("");
+}
+
+els.busca.addEventListener("input", function(evento){
+  state.filtro = evento.target.value;
+  renderizarLista();
+});
+
+els.lista.addEventListener("click", async function(evento){
+  const botao = evento.target.closest("button[data-acao]");
+  if(!botao) return;
+  const id = botao.getAttribute("data-id");
+  const acao = botao.getAttribute("data-acao");
+  const item = state.artigos.find(function(a){ return String(a.id) === String(id); });
+  if(!item) return;
+
+  if(acao === "editar"){ preencherFormulario(item); return; }
+
+  if(acao === "situacao"){
+    const novo = item.status === "publicado" ? "rascunho" : "publicado";
+    const { error } = await supabase.from("faq_articles").update({ status: novo }).eq("id", id);
+    if(error){ toast("Erro: " + error.message); return; }
+    toast(novo === "publicado" ? "Tópico publicado." : "Tópico em rascunho.");
+    await carregarArtigos();
+    return;
+  }
+
+  if(acao === "excluir"){
+    const confirmar = window.confirm("Excluir definitivamente o tópico:\n\n" + item.question);
+    if(!confirmar) return;
+    const { error } = await supabase.from("faq_articles").delete().eq("id", id);
+    if(error){ toast("Erro: " + error.message); return; }
+    toast("Tópico excluído.");
+    if(document.getElementById("topicoId").value === String(id)) limparFormulario();
+    await carregarArtigos();
+  }
+});
+
+/* =========================================================
+   Formulário de cadastro / edição
+   ========================================================= */
+els.passos.addEventListener("input", function(){
+  const total = linhasParaArray(els.passos.value).length;
+  els.passosCount.textContent = total + (total === 1 ? " passo" : " passos");
+});
+
+function preencherFormulario(item){
+  document.getElementById("topicoId").value = item.id;
+  els.jornada.value = item.category_id || "";
+  document.getElementById("titulo").value = item.question || "";
+  document.getElementById("descricao").value = item.answer || "";
+  els.passos.value = (item.steps || []).join("\n");
+  document.getElementById("rotina").value = item.routine || "";
+  document.getElementById("palavras").value = (item.tags || []).join(", ");
+  document.getElementById("status").value = item.status || "publicado";
+
+  const links = Array.isArray(item.links) ? item.links : [];
+  const doc = links.find(function(l){ return l && l.url; }) || {};
+  document.getElementById("docLabel").value = doc.label || "";
+  document.getElementById("docUrl").value = doc.url || "";
+
+  els.formTitle.textContent = "Editar tópico do FAQ";
+  els.btnSalvar.textContent = "Salvar alterações";
+  els.passos.dispatchEvent(new Event("input"));
+  limparAlerta(els.formAlert);
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function limparFormulario(){
+  els.formTopico.reset();
+  document.getElementById("topicoId").value = "";
+  els.formTitle.textContent = "Novo tópico do FAQ";
+  els.btnSalvar.textContent = "Salvar tópico";
+  els.passosCount.textContent = "0 passos";
+  limparAlerta(els.formAlert);
+}
+
+els.btnLimpar.addEventListener("click", limparFormulario);
+
+els.formTopico.addEventListener("submit", async function(evento){
+  evento.preventDefault();
+  limparAlerta(els.formAlert);
+
+  const id        = document.getElementById("topicoId").value;
+  const jornada   = els.jornada.value;
+  const titulo    = document.getElementById("titulo").value.trim();
+  const descricao = document.getElementById("descricao").value.trim();
+  const rotina    = document.getElementById("rotina").value.trim();
+  const docLabel  = document.getElementById("docLabel").value.trim();
+  const docUrl    = document.getElementById("docUrl").value.trim();
+  const palavras  = listaParaArray(document.getElementById("palavras").value);
+  const passos    = linhasParaArray(els.passos.value);
+  const status    = document.getElementById("status").value;
+
+  if(!jornada){ alerta(els.formAlert, "erro", "Selecione a jornada do tópico."); return; }
+  if(titulo.length < 8){ alerta(els.formAlert, "erro", "O título precisa descrever a dúvida com pelo menos 8 caracteres."); return; }
+  if(descricao.length < 12){ alerta(els.formAlert, "erro", "A descrição precisa ter pelo menos 12 caracteres."); return; }
+  if(docUrl && !/^https?:\/\//i.test(docUrl)){ alerta(els.formAlert, "erro", "O link do documento precisa começar com http:// ou https://"); return; }
+  if(docLabel && !docUrl){ alerta(els.formAlert, "erro", "Informe o link do documento da Universidade Voalle."); return; }
+
+  const links = docUrl ? [{ label: docLabel || "Universidade Voalle", url: docUrl }] : [];
+
+  const payload = {
+    category_id: jornada,
+    question: titulo,
+    answer: descricao,
+    steps: passos,
+    routine: rotina || null,
+    tags: palavras,
+    links: links,
+    status: status
+  };
+
+  els.btnSalvar.disabled = true;
+  const rotuloOriginal = els.btnSalvar.textContent;
+  els.btnSalvar.textContent = "Salvando…";
+
+  try{
+    let resposta;
+    if(id){
+      resposta = await supabase.from("faq_articles").update(payload).eq("id", id).select().single();
+    }else{
+      payload.created_by = state.user ? state.user.id : null;
+      resposta = await supabase.from("faq_articles").insert(payload).select().single();
+    }
+    if(resposta.error) throw resposta.error;
+
+    alerta(els.formAlert, "ok", id ? "Tópico atualizado com sucesso." : "Tópico cadastrado com sucesso.");
+    toast(id ? "Alterações salvas." : "Tópico cadastrado.");
+    limparFormulario();
+    await carregarArtigos();
+  }catch(erro){
+    const msg = String(erro.message || erro);
+    if(msg.toLowerCase().indexOf("row-level security") >= 0){
+      alerta(els.formAlert, "erro", "Sem permissão para gravar: confirme se seu usuário está em faq_admins.");
+    }else{
+      alerta(els.formAlert, "erro", "Erro ao salvar: " + msg);
+    }
+  }finally{
+    els.btnSalvar.disabled = false;
+    els.btnSalvar.textContent = rotuloOriginal;
+  }
+});
+
+/* =========================================================
+   Geração e publicação do faq.js consumido pela tela pública
+   ========================================================= */
+function montarFaqJs(){
+  const publicados = state.artigos.filter(function(item){ return item.status === "publicado"; });
+
+  const categorias = state.categorias.map(function(cat){
+    return { id: cat.id, label: cat.label, short: cat.label.split(" ")[0], hint: cat.hint || "" };
+  });
+
+  const itens = publicados.map(function(item){
+    return {
+      id: item.id,
+      category: item.category_id,
+      status: "publicado",
+      question: item.question,
+      answer: item.answer,
+      steps: item.steps || [],
+      routine: item.routine || "",
+      warning: item.warning || "",
+      tags: item.tags || [],
+      links: item.links || [],
+      views: item.views || 0
+    };
+  });
+
+  const populares = [];
+  publicados.forEach(function(item){
+    (item.tags || []).forEach(function(tag){
+      if(populares.length < 8 && populares.indexOf(tag) < 0) populares.push(tag);
+    });
+  });
+
+  return "" +
+    "// Gerado automaticamente pela área administrativa do FAQ\n" +
+    "// Última geração: " + new Date().toISOString() + "\n\n" +
+    "export const CATEGORIES = " + JSON.stringify(categorias, null, 2) + ";\n\n" +
+    "export const FAQ_SEED = " + JSON.stringify(itens, null, 2) + ";\n\n" +
+    "export const POPULAR = " + JSON.stringify(populares, null, 2) + ";\n";
+}
+
+els.btnBaixarJs.addEventListener("click", function(){
+  const blob = new Blob([montarFaqJs()], { type:"text/javascript;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "faq.js";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  toast("faq.js gerado para download.");
+});
+
+els.btnPublicarStorage.addEventListener("click", async function(){
+  limparAlerta(els.listAlert);
+  els.btnPublicarStorage.disabled = true;
+  els.btnPublicarStorage.textContent = "Publicando…";
+  try{
+    const conteudo = new Blob([montarFaqJs()], { type:"text/javascript" });
+    const { error } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(STORAGE_PATH, conteudo, { upsert:true, contentType:"text/javascript", cacheControl:"60" });
+    if(error) throw error;
+    alerta(els.listAlert, "ok", "faq.js atualizado no Storage. Faça um hard refresh (Ctrl + F5) na tela pública.");
+    toast("Storage atualizado.");
+  }catch(erro){
+    alerta(els.listAlert, "erro",
+      "Não foi possível gravar no Storage (" + (erro.message || erro) + "). " +
+      "Use “Baixar faq.js” e suba o arquivo manualmente, ou aplique a policy de escrita no bucket.");
+  }finally{
+    els.btnPublicarStorage.disabled = false;
+    els.btnPublicarStorage.textContent = "Publicar no Storage";
+  }
+});
+</script>
+</body>
+</html>
