@@ -226,7 +226,7 @@
       <label><span class="eyebrow" style="color:var(--cinza)">E-mail</span><input id="adminEmail" type="email" placeholder="admin@empresa.com.br"></label>
       <label><span class="eyebrow" style="color:var(--cinza)">Senha</span><input id="adminPassword" type="password" placeholder="••••••••"></label>
       <div class="admin-row"><button class="pill pill--dark" id="adminLoginBtn">Entrar</button><button class="pill pill--light" id="closeAdmin">Fechar</button></div>
-      <div class="note"><strong>Importante:</strong> troque <span class="font-mono">COLE_SUA_ANON_PUBLIC_KEY_AQUI</span> pela chave <span class="font-mono">anon public</span> do Supabase, não pelo UUID do usuário.</div>
+      <div class="note"><strong>Importante:</strong> troque <span class="font-mono"></span> pela chave <span class="font-mono">anon public</span> do Supabase, não pelo UUID do usuário.</div>
     </div>
   </div>
 
@@ -234,7 +234,7 @@
   <script>
     const STORAGE_FAQ_URL = "https://hgenglxqnunyafymzvoo.supabase.co/storage/v1/object/public/faq/src/faq.js";
     const SUPABASE_PROJECT_URL = "https://hgenglxqnunyafymzvoo.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_secret_MlnHd9TpxQCNsQ0UJ7OyHw_GgEm0r3T";
+    const SUPABASE_ANON_KEY = "sb_secret_UezVpPao1pCnLF2NUv9FJw_8XIgcttF";
 
     const state = {
       query: "",
@@ -416,7 +416,7 @@
       els.closeAdmin.addEventListener("click", () => els.adminModal.classList.remove("show"));
       els.adminModal.addEventListener("click", (event) => { if (event.target === els.adminModal) els.adminModal.classList.remove("show"); });
       els.adminLoginBtn.addEventListener("click", async () => {
-        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === "COLE_SUA_ANON_PUBLIC_KEY_AQUI") {
+        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === "sb_secret_UezVpPao1pCnLF2NUv9FJw_8XIgcttF") {
           showStatus("Preencha a anon public key real do Supabase. Não use UUID de usuário.", "err");
           return;
         }
